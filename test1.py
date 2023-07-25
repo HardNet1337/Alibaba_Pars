@@ -110,7 +110,6 @@ def refresh():
             check = False
             file.close()
 
-
 def main():
     refresh()
     get_link_data()
