@@ -90,7 +90,6 @@ def get_link_data():
                            )
 
     file_links = open('Links.txt', 'r', encoding='utf-8')
-    log = open('Items_log.txt', 'w', encoding='utf-8')
     check = True
     sub_url = "1"
     number = 1
@@ -139,7 +138,7 @@ def get_link_data():
                 if item_var_len > 1:
                     item_var_check = True
                 if item_var_check == True:
-                    item_var = 'variable'
+                    item_var = 'variation'
                     item_tax_class = 'parent'
 
                 else:
@@ -205,7 +204,7 @@ def get_link_data():
                                 if item_var == "simple":
                                     item_attribute_visible = "1"
                                     item_attribute_global = "1"
-                                if item_var == "variable":
+                                if item_var == "variation":
                                     item_attribute_visible = " "
                                     item_attribute_global = " "
                                 item_attribute = {
@@ -259,7 +258,7 @@ def get_link_data():
                     item_description_desc1 = str(item_description_desc.text)
                 except Exception as exDesc:
                     item_description_desc = " "
-                item_description = f"{item_description_overviev, item_description_desc}"
+                item_description = f"{item_description_desc}"
                 item_description_short = item_description_overviev1 + item_description_desc1
                 if item_description == " ":
                     try:
@@ -277,15 +276,59 @@ def get_link_data():
                     item_description_short = item_description_overviev1 + item_description_desc1
 
                 item_stock_first = soup.find('div', class_='lead-list').find('tr').find_all('td')
-                item_in_stock = item_stock_first[1]
-                item_stock_first = soup.find('div', class_='lead-list').find_all('tr')
-                item_stock_second = item_stock_first[1].find_all_next('td')
-                item_stock = item_stock_second[1]
+                item_stock_second = item_stock_first[1].text
+                item_stock_third = item_stock_second.split('-')
+                item_stock = int(item_stock_third[1].strip())
+                if item_stock > 0:
+                    item_in_stock = "1"
+                else:
+                    item_in_stock = "0"
 
                 try:
                     item_seller_url = soup.find('a', class_='company-name company-name-lite-vb').get('href')
                 except:
                     item_seller_url = soup.find('div', class_='company-head').find('a').get('href')
+
+                item_weight = " "
+                try:
+                    item_weight_elements = soup.find('div', class_='widget-detail-overview').text
+                    start = item_weight_elements.find('Вес')
+                    end = item_weight_elements.find('Вес') + 10
+                    item_weight = item_weight_elements[start:end]
+                except:
+                    item_weight = " "
+                if item_weight == " ":
+                    try:
+                        item_weight_elements = soup.find('div', class_='widget-detail-overview').text
+                        start = item_weight_elements.find('Масса')
+                        end = item_weight_elements.find('Масса') + 15
+                        item_weight = item_weight_elements[start:end]
+                    except:
+                        item_weight = " "
+                if item_weight == " ":
+                    try:
+                        item_weight_elements = soup.find('div', class_='widget-detail-overview').text
+                        start = item_weight_elements.find('Weight')
+                        end = item_weight_elements.find('Weight') + 15
+                        item_weight = item_weight_elements[start:end]
+                    except:
+                        item_weight = " "
+
+                try:
+                    item_size_elements = soup.find('div', class_='widget-detail-overview').text
+                    start = item_size_elements.find('Размер')
+                    end = item_size_elements.find('Размер') + 25
+                    item_size = item_size_elements[start:end]
+                except:
+                    item_size = " "
+                if item_size == " ":
+                    try:
+                        item_size_elements = soup.find('div', class_='widget-detail-overview').text
+                        start = item_size_elements.find('Size')
+                        end = item_size_elements.find('Size') + 15
+                        item_size = item_size_elements[start:end]
+                    except:
+                        item_size = " "
 
                 #Это список атрибутов, значения которых всегда статичны, кроме url товара
                 item_published = '1'
@@ -312,10 +355,10 @@ def get_link_data():
                     "Description": item_description,
                     "Tax status": item_tax,
                     "Tax class": item_tax_class,
-                    "In Stock?": item_in_stock.text,
-                    "Stock": item_stock.text,
-                    "Weight(g)":" ",
-                    "Length(cm)":" ",
+                    "In Stock?": item_in_stock,
+                    "Stock": item_stock,
+                    "Weight(g)": item_weight,
+                    "Length(cm)": item_size,
                     "Width(cm)":" ",
                     "Height(cm)":" ",
                     "Allow customer revievs?":item_reviews,
@@ -377,8 +420,10 @@ def get_link_data():
                 exel_write('Items_test', item_data=item_data)
                 print("Step 3")
             except Exception as ex:
+                log = open('Items_log.txt', 'w', encoding='utf-8')
                 log_data = str(ex) + '\n' + '_' * 60 + '\n'
                 log.writelines(log_data)
+                log.close()
         else:
             check = False
     file_links.close()
@@ -389,8 +434,8 @@ def get_link_data():
     print("Collecting data is finished")
 
 #Функция refresh задает исходный файл для функции get_data, чистит файл для сохранения ссылок
-def refresh():
-    file = open('Categories_test.txt', 'r', encoding='utf-8')
+def refresh(file_name):
+    file = open(f'{file_name}.txt', 'r', encoding='utf-8')
     file_clean = open('Links.txt', 'w', encoding='utf-8')
     file_clean.write('')
     file_clean.close()
@@ -505,7 +550,7 @@ def exel_write(file_name, item_data):
     wb.save(file)
 
 def main():
-    #refresh()
+    #refresh("Categories_test")
     get_link_data()
 
 if __name__ == "__main__":
