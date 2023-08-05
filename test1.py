@@ -291,41 +291,41 @@ def get_link_data():
 
                 item_weight = " "
                 try:
-                    item_weight_elements = soup.find('div', class_='widget-detail-overview').text
-                    start = item_weight_elements.find('Вес')
-                    end = item_weight_elements.find('Вес') + 10
+                    item_weight_elements = soup.find('div', class_='widget-detail-overview').text.lower()
+                    start = item_weight_elements.find('вес')
+                    end = item_weight_elements.find('вес') + 10
                     item_weight = item_weight_elements[start:end]
                 except:
                     item_weight = " "
                 if item_weight == " ":
                     try:
-                        item_weight_elements = soup.find('div', class_='widget-detail-overview').text
-                        start = item_weight_elements.find('Масса')
-                        end = item_weight_elements.find('Масса') + 15
+                        item_weight_elements = soup.find('div', class_='widget-detail-overview').text.lower()
+                        start = item_weight_elements.find('масса')
+                        end = item_weight_elements.find('масса') + 15
                         item_weight = item_weight_elements[start:end]
                     except:
                         item_weight = " "
                 if item_weight == " ":
                     try:
-                        item_weight_elements = soup.find('div', class_='widget-detail-overview').text
-                        start = item_weight_elements.find('Weight')
-                        end = item_weight_elements.find('Weight') + 15
+                        item_weight_elements = soup.find('div', class_='widget-detail-overview').text.lower()
+                        start = item_weight_elements.find('weight')
+                        end = item_weight_elements.find('weight') + 15
                         item_weight = item_weight_elements[start:end]
                     except:
                         item_weight = " "
 
                 try:
-                    item_size_elements = soup.find('div', class_='widget-detail-overview').text
-                    start = item_size_elements.find('Размер')
-                    end = item_size_elements.find('Размер') + 25
+                    item_size_elements = soup.find('div', class_='widget-detail-overview').text.lower()
+                    start = item_size_elements.find('размер')
+                    end = item_size_elements.find('размер') + 25
                     item_size = item_size_elements[start:end]
                 except:
                     item_size = " "
                 if item_size == " ":
                     try:
-                        item_size_elements = soup.find('div', class_='widget-detail-overview').text
-                        start = item_size_elements.find('Size')
-                        end = item_size_elements.find('Size') + 15
+                        item_size_elements = soup.find('div', class_='widget-detail-overview').text.lower()
+                        start = item_size_elements.find('size')
+                        end = item_size_elements.find('size') + 15
                         item_size = item_size_elements[start:end]
                     except:
                         item_size = " "
