@@ -89,7 +89,7 @@ def get_link_data():
     }
                            )
 
-    file_links = open('Links.txt', 'r', encoding='utf-8')
+    file_links = open('Links_test.txt', 'r', encoding='utf-8')
     check = True
     sub_url = "1"
     number = 1
@@ -428,7 +428,6 @@ def get_link_data():
             check = False
     file_links.close()
     file_data.close()
-    log.close()
     driver.close()
     driver.quit()
     print("Collecting data is finished")
@@ -549,7 +548,18 @@ def exel_write(file_name, item_data):
                "Attribute 10 value(s)", "Attribute 10 visible", "Attribute 10 global", "Meta: _m_link"])
     wb.save(file)
 
+def exel_remove():
+    print("Start removing exel")
+    file_name1 = "Items_test"
+    file_name2 = "Items_test.xlsx"
+    if os.path.exists(file_name1):
+        os.remove(file_name1)
+    if os.path.exists(file_name2):
+        os.remove(file_name2)
+    print("Exel removed")
+
 def main():
+    exel_remove()
     #refresh("Categories_test")
     get_link_data()
 
