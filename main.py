@@ -89,7 +89,7 @@ def get_link_data():
     }
                            )
 
-    file_links = open('Links_test.txt', 'r', encoding='utf-8')
+    file_links = open('Links.txt', 'r', encoding='utf-8')
     check = True
     sub_url = "1"
     number = 1
@@ -417,7 +417,7 @@ def get_link_data():
                 }
                 print(f"Item {number} collected")
                 number = number + 1
-                exel_write('Items_test', item_data=item_data)
+                exel_write('Items', item_data=item_data)
                 print("Step 3")
             except Exception as ex:
                 log = open('Items_log.txt', 'w', encoding='utf-8')
@@ -560,7 +560,7 @@ def exel_remove():
 
 def main():
     exel_remove()
-    #refresh("Categories_test")
+    refresh("Categories")
     get_link_data()
 
 if __name__ == "__main__":
