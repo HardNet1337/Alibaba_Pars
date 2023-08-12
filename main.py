@@ -205,8 +205,8 @@ def get_link_data():
                                     item_attribute_visible = "1"
                                     item_attribute_global = "1"
                                 if item_var == "variation":
-                                    item_attribute_visible = " "
-                                    item_attribute_global = " "
+                                    item_attribute_visible = "1"
+                                    item_attribute_global = "1"
                                 item_attribute = {
                                 f"Attribute {item_attribute_num} name": item_attribute_name.text,
                                 f"Attribute {item_attribute_num} value(s)": item_attribute_value,
@@ -250,30 +250,39 @@ def get_link_data():
                 item_description_desc1 = " "
                 try:
                     item_description_overviev = soup.find('div', class_='do-content')
-                    item_description_overviev1 = str(item_description_overviev.text)
+                    item_description_overviev1 = str(item_description_overviev.prettify())
                 except Exception as exDesc:
                     item_description_overviev = " "
                 try:
                     item_description_desc = soup.find('div', class_='ife-detail-decorate-table')
-                    item_description_desc1 = str(item_description_desc.text)
+                    item_description_desc1 = str(item_description_desc.prettify())
                 except Exception as exDesc:
                     item_description_desc = " "
                 item_description = f"{item_description_desc}"
-                item_description_short = item_description_overviev1 + item_description_desc1
+                item_description_short = item_description_overviev
                 if item_description == " ":
                     try:
                         item_description_overviev = soup.find('div', class_='do-entry do-entry-separate')
-                        item_description_overviev1 = str(item_description_overviev.text)
+                        item_description_overviev1 = str(item_description_overviev.prettify())
                     except:
                         item_description_overviev = " "
                 if item_description_short == " ":
                     try:
                         item_description_desc = soup.find('div', class_='aliDataTable')
-                        item_description_desc1 = str(item_description_desc.text)
+                        item_description_desc1 = str(item_description_desc.prettify())
                     except :
                         item_description_desc = " "
                     item_description = f"{item_description_overviev, item_description_desc}"
-                    item_description_short = item_description_overviev1 + item_description_desc1
+                    item_description_short = item_description_overviev
+
+                try:
+                    item_description_main_short = soup.find('div', class_='do-entry-list')
+                    item_description_short = " "
+                    item_descriptions_short = item_description_main_short.find_all('dl')
+                    for item_desc_item in item_descriptions_short:
+                        item_description_short = item_description_short + item_desc_item.text + "<br/>"
+                except:
+                    item_description_short = " "
 
                 item_stock_first = soup.find('div', class_='lead-list').find('tr').find_all('td')
                 item_stock_second = item_stock_first[1].text
@@ -289,46 +298,11 @@ def get_link_data():
                 except:
                     item_seller_url = soup.find('div', class_='company-head').find('a').get('href')
 
-                item_weight = " "
                 try:
-                    item_weight_elements = soup.find('div', class_='widget-detail-overview').text.lower()
-                    start = item_weight_elements.find('вес')
-                    end = item_weight_elements.find('вес') + 10
-                    item_weight = item_weight_elements[start:end]
+                    item_rate_block = soup.find('div', class_='review-conclusion').find('span', class_='next-form-text-align review-value').text
                 except:
-                    item_weight = " "
-                if item_weight == " ":
-                    try:
-                        item_weight_elements = soup.find('div', class_='widget-detail-overview').text.lower()
-                        start = item_weight_elements.find('масса')
-                        end = item_weight_elements.find('масса') + 15
-                        item_weight = item_weight_elements[start:end]
-                    except:
-                        item_weight = " "
-                if item_weight == " ":
-                    try:
-                        item_weight_elements = soup.find('div', class_='widget-detail-overview').text.lower()
-                        start = item_weight_elements.find('weight')
-                        end = item_weight_elements.find('weight') + 15
-                        item_weight = item_weight_elements[start:end]
-                    except:
-                        item_weight = " "
-
-                try:
-                    item_size_elements = soup.find('div', class_='widget-detail-overview').text.lower()
-                    start = item_size_elements.find('размер')
-                    end = item_size_elements.find('размер') + 25
-                    item_size = item_size_elements[start:end]
-                except:
-                    item_size = " "
-                if item_size == " ":
-                    try:
-                        item_size_elements = soup.find('div', class_='widget-detail-overview').text.lower()
-                        start = item_size_elements.find('size')
-                        end = item_size_elements.find('size') + 15
-                        item_size = item_size_elements[start:end]
-                    except:
-                        item_size = " "
+                    item_rate_block = " "
+                item_rate = item_rate_block
 
                 #Это список атрибутов, значения которых всегда статичны, кроме url товара
                 item_published = '1'
@@ -351,14 +325,14 @@ def get_link_data():
                     "Published": item_published,
                     "Is featured": item_feat,
                     "Visibility in catalogue": item_visiblity,
-                    "Short description": item_description_short,
-                    "Description": item_description,
+                    "Short description": item_description,
+                    "Description": item_description_short,
                     "Tax status": item_tax,
                     "Tax class": item_tax_class,
                     "In Stock?": item_in_stock,
                     "Stock": item_stock,
-                    "Weight(g)": item_weight,
-                    "Length(cm)": item_size,
+                    "Weight(g)": " ",
+                    "Length(cm)": " ",
                     "Width(cm)":" ",
                     "Height(cm)":" ",
                     "Allow customer revievs?":item_reviews,
@@ -413,7 +387,8 @@ def get_link_data():
                     "Attribute 10 value(s)": item_attributes[f"Attribute 10 value(s)"],
                     "Attribute 10 visible": item_attributes[f"Attribute 10 visible"],
                     "Attribute 10 global": item_attributes[f"Attribute 10 global"],
-                    "Meta: _m_link": item_seller_url
+                    "Meta: _m_link": item_seller_url,
+                    "Item rate": item_rate
                 }
                 print(f"Item {number} collected")
                 number = number + 1
@@ -526,7 +501,8 @@ def exel_write(file_name, item_data):
         item_data["Attribute 10 value(s)"],
         item_data["Attribute 10 visible"],
         item_data["Attribute 10 global"],
-        item_data["Meta: _m_link"]
+        item_data["Meta: _m_link"],
+        item_data["Item rate"]
                    ])
     else:
         with open("Items_test", "w", encoding="utf-8"):
@@ -545,13 +521,13 @@ def exel_write(file_name, item_data):
                "Attribute 7 value(s)", "Attribute 7 visible", "Attribute 7 global", "Attribute 8 name",
                "Attribute 8 value(s)", "Attribute 8 visible", "Attribute 8 global", "Attribute 9 name",
                "Attribute 9 value(s)", "Attribute 9 visible", "Attribute 9 global", "Attribute 10 name",
-               "Attribute 10 value(s)", "Attribute 10 visible", "Attribute 10 global", "Meta: _m_link"])
+               "Attribute 10 value(s)", "Attribute 10 visible", "Attribute 10 global", "Meta: _m_link", "Item rate"])
     wb.save(file)
 
 def exel_remove():
     print("Start removing exel")
-    file_name1 = "Items_test"
-    file_name2 = "Items_test.xlsx"
+    file_name1 = "Items"
+    file_name2 = "Items.xlsx"
     if os.path.exists(file_name1):
         os.remove(file_name1)
     if os.path.exists(file_name2):
