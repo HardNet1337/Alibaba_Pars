@@ -284,6 +284,74 @@ def get_link_data():
                 except:
                     item_description_short = " "
 
+                try:
+                    item_weight_index = item_description_short.find('Масса')
+                    item_weight_point = item_description_short.rfind('br/')
+                    item_weight_middle = item_description_short[item_weight_index:item_weight_point]
+                    item_weight_point = item_weight_middle.find('br/')
+                    item_weight = item_weight_middle[:item_weight_point]
+                    if item_weight == " ":
+                        item_weight_index = item_description_short.find('масса')
+                        item_weight_point = item_description_short.rfind('br/')
+                        item_weight_middle = item_description_short[item_weight_index:item_weight_point]
+                        item_weight_point = item_weight_middle.find('br/')
+                        item_weight = item_weight_middle[:item_weight_point]
+                    elif item_weight == " ":
+                        item_weight_index = item_description_short.find('Weight')
+                        item_weight_point = item_description_short.rfind('br/')
+                        item_weight_middle = item_description_short[item_weight_index:item_weight_point]
+                        item_weight_point = item_weight_middle.find('br/')
+                        item_weight = item_weight_middle[:item_weight_point]
+                    elif item_weight == " ":
+                        item_weight_index = item_description_short.find('weight')
+                        item_weight_point = item_description_short.rfind('br/')
+                        item_weight_middle = item_description_short[item_weight_index:item_weight_point]
+                        item_weight_point = item_weight_middle.find('br/')
+                        item_weight = item_weight_middle[:item_weight_point]
+                    elif item_weight == " ":
+                        item_weight_index = item_description_short.find('Вес')
+                        item_weight_point = item_description_short.rfind('br/')
+                        item_weight_middle = item_description_short[item_weight_index:item_weight_point]
+                        item_weight_point = item_weight_middle.find('br/')
+                        item_weight = item_weight_middle[:item_weight_point]
+                    elif item_weight == " ":
+                        item_weight_index = item_description_short.find('вес')
+                        item_weight_point = item_description_short.rfind('br/')
+                        item_weight_middle = item_description_short[item_weight_index:item_weight_point]
+                        item_weight_point = item_weight_middle.find('br/')
+                        item_weight = item_weight_middle[:item_weight_point]
+                except:
+                    item_weight = " "
+
+                try:
+                    item_size_index = item_description_short.find('Размер')
+                    item_size_point = item_description_short.rfind('br/')
+                    item_size_middle = item_description_short[item_size_index:item_size_point]
+                    item_size_point = item_size_middle.find('br/')
+                    item_size = item_size_middle[:item_size_point]
+                    if item_size == " ":
+                        item_size_index = item_description_short.find('размер')
+                        item_size_point = item_description_short.rfind('br/')
+                        item_size_middle = item_description_short[item_size_index:item_size_point]
+                        item_size_point = item_size_middle.find('br/')
+                        item_size = item_size_middle[:item_size_point]
+                    elif item_size == " ":
+                        item_size_index = item_description_short.find('Size')
+                        item_size_point = item_description_short.rfind('br/')
+                        item_size_middle = item_description_short[item_size_index:item_size_point]
+                        item_size_point = item_size_middle.find('br/')
+                        item_size = item_size_middle[:item_size_point]
+                    elif item_size == " ":
+                        item_size_index = item_description_short.find('size')
+                        item_size_point = item_description_short.rfind('br/')
+                        item_size_middle = item_description_short[item_size_index:item_size_point]
+                        item_size_point = item_size_middle.find('br/')
+                        item_size = item_size_middle[:item_size_point]
+                except:
+                    item_size = " "
+                print(item_size)
+                print(item_weight)
+
                 item_stock_first = soup.find('div', class_='lead-list').find('tr').find_all('td')
                 item_stock_second = item_stock_first[1].text
                 item_stock_third = item_stock_second.split('-')
