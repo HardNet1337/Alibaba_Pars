@@ -89,7 +89,7 @@ def get_link_data():
     }
                            )
 
-    file_links = open('Links.txt', 'r', encoding='utf-8')
+    file_links = open('Links_test.txt', 'r', encoding='utf-8')
     check = True
     sub_url = "1"
     number = 1
@@ -349,8 +349,6 @@ def get_link_data():
                         item_size = item_size_middle[:item_size_point]
                 except:
                     item_size = " "
-                print(item_size)
-                print(item_weight)
 
                 item_stock_first = soup.find('div', class_='lead-list').find('tr').find_all('td')
                 item_stock_second = item_stock_first[1].text
@@ -371,6 +369,17 @@ def get_link_data():
                 except:
                     item_rate_block = " "
                 item_rate = item_rate_block
+
+                try:
+                    item_company_items = soup.find('div', class_='company-card is-ps')
+                    item_company = item_company_items.find_all('div', class_='info-intro')
+                    item_items = item_company[-1].text
+                    if "+" in item_items:
+                        pass
+                    else:
+                        item_items = " "
+                except:
+                    item_items = " "
 
                 #Это список атрибутов, значения которых всегда статичны, кроме url товара
                 item_published = '1'
@@ -456,14 +465,15 @@ def get_link_data():
                     "Attribute 10 visible": item_attributes[f"Attribute 10 visible"],
                     "Attribute 10 global": item_attributes[f"Attribute 10 global"],
                     "Meta: _m_link": item_seller_url,
-                    "Item rate": item_rate
+                    "Item rate": item_rate,
+                    "Company items": item_items
                 }
                 print(f"Item {number} collected")
                 number = number + 1
                 exel_write('Items', item_data=item_data)
                 print("Step 3")
             except Exception as ex:
-                log = open('Items_log.txt', 'w', encoding='utf-8')
+                log = open('Items_log.txt', 'a', encoding='utf-8')
                 log_data = str(ex) + '\n' + '_' * 60 + '\n'
                 log.writelines(log_data)
                 log.close()
@@ -570,7 +580,8 @@ def exel_write(file_name, item_data):
         item_data["Attribute 10 visible"],
         item_data["Attribute 10 global"],
         item_data["Meta: _m_link"],
-        item_data["Item rate"]
+        item_data["Item rate"],
+        item_data["Company items"]
                    ])
     else:
         with open("Items_test", "w", encoding="utf-8"):
@@ -589,7 +600,7 @@ def exel_write(file_name, item_data):
                "Attribute 7 value(s)", "Attribute 7 visible", "Attribute 7 global", "Attribute 8 name",
                "Attribute 8 value(s)", "Attribute 8 visible", "Attribute 8 global", "Attribute 9 name",
                "Attribute 9 value(s)", "Attribute 9 visible", "Attribute 9 global", "Attribute 10 name",
-               "Attribute 10 value(s)", "Attribute 10 visible", "Attribute 10 global", "Meta: _m_link", "Item rate"])
+               "Attribute 10 value(s)", "Attribute 10 visible", "Attribute 10 global", "Meta: _m_link", "Item rate", "Company items"])
     wb.save(file)
 
 def exel_remove():
@@ -604,7 +615,7 @@ def exel_remove():
 
 def main():
     exel_remove()
-    refresh("Categories")
+    #refresh("Categories")
     get_link_data()
 
 if __name__ == "__main__":
